@@ -32,6 +32,10 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /usr/share/elasticsearch/data
+        # - name: config
+        #   mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+        #   readOnly: true
+        #   subPath: elasticsearch.yml
         env:
           - name: cluster.name
             value: k8s-logs
@@ -45,6 +49,14 @@ spec:
             value: "es-cluster-0,es-cluster-1,es-cluster-2"
           - name: ES_JAVA_OPTS
             value: "-Xms512m -Xmx512m"
+          - name: xpack.security.enabled
+            value: "true"
+          - name: xpack.monitoring.collection.enabled
+            value: "true"
+      # volumes:
+      # - name: config
+      #   configMap:
+      #     name: elasticsearch-config
       initContainers:
         - name: fix-permissions
           image: busybox
@@ -74,4 +86,4 @@ spec:
       storageClassName: gp2
       resources:
         requests:
-          storage: 100Gi
+          storage: 30Gi
